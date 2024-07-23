@@ -12,13 +12,73 @@ analizar_logs() {
     # Extraer rutas más visitadas
     echo "Rutas más visitadas:"
     awk '{print $7}' $LOG_FILE | sort | uniq -c | sort -nr | head -n 5
+    awk '{print $5}' $LOG_FILE | sort | uniq -c | sort -nr | head -n 5
 }
 
 # Función para generar informes
 generar_informes() {
     echo "Generando informes de acceso al servidor web..."
-    # Implementar más análisis y generación de informes según sea necesario
+
+    LOG_FILE="/var/log/apache2/access.log"
+
+    # Informe: Navegadores más utilizados
+    echo "Navegadores más utilizados:"
+    awk -F\" '{print $7}' $LOG_FILE | sort | uniq -c | sort -nr | head -n 5
+
+    # Informe: Códigos de respuesta HTTP más frecuentes
+    echo "Códigos de respuesta HTTP más frecuentes:"
+    awk '{print $5}' $LOG_FILE | sort | uniq -c | sort -nr
+
+    # Informe: Hits por día de la semana
+    echo "Hits por día de la semana:"
+    awk '{print $4}' $LOG_FILE | cut -d'[' -f2 | cut -d':' -f1 | sort | uniq -c | sort -nr
+
+    # Informe: Hits por hora del día
+    echo "Hits por hora del día:"
+    awk '{print $4}' $LOG_FILE | cut -d':' -f2 | sort | uniq -c | sort -n
+
+    # Informe: Tamaños de respuesta más comunes
+    echo "Tamaños de respuesta más comunes:"
+    awk '{print $10}' $LOG_FILE | sort -n | uniq -c | sort -nr | head -n 5
+
+    # Informe: Clientes que generan más tráfico
+    echo "Clientes que generan más tráfico:"
+    awk '{print $1}' $LOG_FILE | sort | uniq -c | sort -nr | head -n 5
+
+    # Informe: Métodos HTTP más utilizados
+    echo "Métodos HTTP más utilizados:"
+    awk '{print $6}' $LOG_FILE | sort | uniq -c | sort -nr | head -n 5
+
+    # Informe: Códigos de estado de respuesta más frecuentes
+    echo "Códigos de estado de respuesta más frecuentes:"
+    awk '{print $9}' $LOG_FILE | sort | uniq -c | sort -nr | head -n 5
+
+    # Informe: Tamaños de archivo más solicitados
+    echo "Tamaños de archivo más solicitados:"
+    awk '{print $10}' $LOG_FILE | sort -n | uniq -c | sort -nr | head -n 5
+
+    # Informe: Referers más comunes
+    echo "Referers más comunes:"
+    awk -F\" '{print $4}' $LOG_FILE | sort | uniq -c | sort -nr | head -n 5
+
+    # Informe: Códigos de respuesta de error más frecuentes
+    echo "Códigos de respuesta de error más frecuentes:"
+    awk '$9 >= 400 {print $9}' $LOG_FILE | sort | uniq -c | sort -nr | head -n 5
+
+    # Informe: Hosts más visitados
+    echo "Hosts más visitados:"
+    awk '{print $8}' $LOG_FILE | sort | uniq -c | sort -nr | head -n 5
+
+    # Informe: Protocolos utilizados
+    echo "Protocolos utilizados:"
+    awk '{print $12}' $LOG_FILE | sort | uniq -c | sort -nr | head -n 5
+
+    # Informe: Códigos de respuesta redireccionados más frecuentes
+    echo "Códigos de respuesta redireccionados más frecuentes:"
+    awk '$9 >= 300 && $9 < 400 {print $9}' $LOG_FILE | sort | uniq -c | sort -nr | head -n 5
 }
+
+
 
 # Función para monitorear acceso en tiempo real
 monitorear_acceso() {
