@@ -12,6 +12,7 @@ analizar_logs() {
     # Extraer rutas más visitadas
     echo "Rutas más visitadas:"
     awk '{print $7}' $LOG_FILE | sort | uniq -c | sort -nr | head -n 5
+    awk '{print $5}' $LOG_FILE | sort | uniq -c | sort -nr | head -n 5
 }
 
 # Función para generar informes
@@ -22,11 +23,11 @@ generar_informes() {
 
     # Informe: Navegadores más utilizados
     echo "Navegadores más utilizados:"
-    awk -F\" '{print $6}' $LOG_FILE | sort | uniq -c | sort -nr | head -n 5
+    awk -F\" '{print $7}' $LOG_FILE | sort | uniq -c | sort -nr | head -n 5
 
     # Informe: Códigos de respuesta HTTP más frecuentes
     echo "Códigos de respuesta HTTP más frecuentes:"
-    awk '{print $9}' $LOG_FILE | sort | uniq -c | sort -nr
+    awk '{print $5}' $LOG_FILE | sort | uniq -c | sort -nr
 
     # Informe: Hits por día de la semana
     echo "Hits por día de la semana:"
