@@ -18,10 +18,5 @@ códigos de respuesta, etc.
    - Generar informes sobre el tráfico del servidor web, incluyendo
 estadísticas como las IPs más activas, las rutas más visitadas, etc.
 
-3. **Monitoreo y Acciones Automatizadas:**
-   - Monitorear en tiempo real el acceso al servidor web utilizando `htop`.
-   - Automatizar acciones como bloquear direcciones IP que realicen
-accesos maliciosos utilizando `iptables`.
-
-4. **Usaremos este archivo para verificar logs
+3. **Usaremos este archivo para verificar logs
 https://raw.githubusercontent.com/linuxacademy/content-elastic-log-samples/master/access.log
