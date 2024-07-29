@@ -1,7 +1,6 @@
 #!/bin/bash
 
-# Script para análisis y generación de informes de acceso a un servidor web
-
+# Función para analizar logs del servidor web
 analizar_logs() {
     echo "Analizando logs del servidor web..."
     LOG_FILE="/tmp/vargas_adriana/access.log"
@@ -78,6 +77,40 @@ generar_informes() {
     awk '$9 >= 300 && $9 < 400 {print $9}' $LOG_FILE | sort | uniq -c | sort -nr | head -n 5
 }
 
+# Función para monitorear acceso en tiempo real
+monitorear_acceso() {
+    echo "Monitoreando acceso en tiempo real con htop..."
+    if command -v htop >/dev/null 2>&1; then
+        htop
+    else
+        echo "htop no está instalado. Usando top en su lugar."
+        top
+    fi
+}
+
+# Función para bloquear IPs maliciosas
+bloquear_ips() {
+    echo "Buscando IPs maliciosas y bloqueando con iptables..."
+
+    # Ruta al archivo de log
+    LOG_FILE="/tmp/vargas_adriana/access.log"
+
+    # Encontrar IPs con más de 100 solicitudes en el archivo de log (ajustar según sea necesario)
+    malicious_ips=$(awk '{print $1}' "$LOG_FILE" | sort | uniq -c | awk '$1 > 100 {print $2}')
+
+    # Bloquear cada IP maliciosa con iptables y mostrar país
+    for ip in $malicious_ips; do
+        echo "Bloqueando IP: $ip"
+
+        # Obtener información del país para la IP
+        country=$(curl -s ipinfo.io/$ip/country)
+        echo "IP $ip pertenece al país: $country"
+
+        # Bloquear IP con iptables
+        sudo iptables -A INPUT -s "$ip" -j DROP
+    done
+}
+
 # Función principal del script
 main() {
     clear
@@ -86,12 +119,12 @@ main() {
 
     analizar_logs
     generar_informes
+    monitorear_acceso
+    bloquear_ips
 
     echo "----------------------------------------------"
     echo "Fin del script."
 }
 
-
 # Llamar a la función principal
 main
-
