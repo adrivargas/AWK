@@ -1,5 +1,6 @@
 # AWK
-Comando de AWK
+Comando de AWK, para poder ejecutar el script, use Webssh e ingrese al host bandit, cree un directorio dentro de tmp, dentro de tmp creamos un dir Vargas_Adriana y dentro va los dos archivos.
+
 ### Proyecto: Análisis y Generación de Informes de Acceso a un Servidor Web
 
 #### Objetivo:
